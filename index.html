@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Fotografi</title>
+    <title>Portfolio Fotografi Premium</title>
     <style>
         * {
             margin: 0;
@@ -12,68 +12,118 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #0a0a0a;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #000;
             color: #fff;
             overflow-x: hidden;
         }
 
-        /* Header */
+        /* Animated Background Gradient */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #4facfe 75%, #00f2fe 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            opacity: 0.03;
+            z-index: -1;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Header with Glassmorphism */
         header {
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            background: rgba(10, 10, 10, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 20px 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+
+        header.scrolled {
+            background: rgba(0, 0, 0, 0.95);
+            padding: 10px 0;
         }
 
         nav {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 0 40px;
+            padding: 25px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: 700;
-            letter-spacing: 2px;
-            background: linear-gradient(45deg, #fff, #888);
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
         }
 
         .nav-links {
             display: flex;
-            gap: 40px;
+            gap: 45px;
             list-style: none;
         }
 
         .nav-links a {
-            color: #fff;
+            color: rgba(255, 255, 255, 0.8);
             text-decoration: none;
-            font-size: 14px;
-            letter-spacing: 1px;
-            transition: color 0.3s;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transition: width 0.3s;
         }
 
         .nav-links a:hover {
-            color: #888;
+            color: #fff;
         }
 
-        /* Hero Section */
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Hero with 3D Effect */
         .hero {
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
             position: relative;
             overflow: hidden;
         }
@@ -81,18 +131,33 @@
         .hero::before {
             content: '';
             position: absolute;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.3) 0%, transparent 70%);
             border-radius: 50%;
-            top: -200px;
+            top: -400px;
             right: -200px;
             animation: float 20s infinite ease-in-out;
+            filter: blur(80px);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(240, 147, 251, 0.3) 0%, transparent 70%);
+            border-radius: 50%;
+            bottom: -300px;
+            left: -200px;
+            animation: float 25s infinite ease-in-out reverse;
+            filter: blur(80px);
         }
 
         @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            50% { transform: translate(-50px, 50px); }
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
         }
 
         .hero-content {
@@ -101,24 +166,78 @@
         }
 
         .hero h1 {
-            font-size: 72px;
-            font-weight: 300;
-            margin-bottom: 20px;
-            letter-spacing: 3px;
-            animation: fadeInUp 1s ease;
+            font-size: 90px;
+            font-weight: 900;
+            margin-bottom: 25px;
+            letter-spacing: -2px;
+            background: linear-gradient(135deg, #fff 0%, #667eea 50%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease, textGlow 3s ease-in-out infinite;
+            text-shadow: 0 0 60px rgba(102, 126, 234, 0.5);
+        }
+
+        @keyframes textGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.5)); }
+            50% { filter: drop-shadow(0 0 30px rgba(102, 126, 234, 0.8)); }
         }
 
         .hero p {
-            font-size: 20px;
-            color: #888;
-            letter-spacing: 2px;
-            animation: fadeInUp 1s ease 0.2s backwards;
+            font-size: 24px;
+            color: rgba(255, 255, 255, 0.7);
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            font-weight: 300;
+            animation: fadeInUp 1s ease 0.3s backwards;
+        }
+
+        .hero-cta {
+            margin-top: 40px;
+            animation: fadeInUp 1s ease 0.6s backwards;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 18px 45px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 50px rgba(102, 126, 234, 0.6);
         }
 
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(40px);
             }
             to {
                 opacity: 1;
@@ -126,50 +245,66 @@
             }
         }
 
-        /* Gallery Section */
+        /* Gallery with Masonry Layout */
         .gallery-section {
-            padding: 100px 40px;
-            max-width: 1400px;
+            padding: 120px 40px;
+            max-width: 1600px;
             margin: 0 auto;
+            position: relative;
         }
 
         .section-title {
             text-align: center;
-            font-size: 48px;
-            font-weight: 300;
-            margin-bottom: 60px;
-            letter-spacing: 2px;
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #fff 0%, #667eea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 80px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
         }
 
         .gallery-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 20px;
+            columns: 3;
+            column-gap: 25px;
         }
 
         .gallery-item {
             position: relative;
+            margin-bottom: 25px;
+            break-inside: avoid;
             overflow: hidden;
-            aspect-ratio: 4/3;
-            background: #1a1a1a;
+            border-radius: 20px;
             cursor: pointer;
-            border-radius: 8px;
-            transition: transform 0.5s ease;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .gallery-item:hover {
-            transform: scale(1.02);
+            transform: translateY(-10px);
+            box-shadow: 0 25px 60px rgba(102, 126, 234, 0.3);
+            border-color: rgba(102, 126, 234, 0.3);
         }
 
         .gallery-item img {
             width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
+            display: block;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .gallery-item:hover img {
-            transform: scale(1.1);
+            transform: scale(1.08);
         }
 
         .gallery-overlay {
@@ -177,10 +312,10 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
-            padding: 30px;
-            transform: translateY(100%);
-            transition: transform 0.3s ease;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 50%, transparent 100%);
+            padding: 35px;
+            transform: translateY(calc(100% - 60px));
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .gallery-item:hover .gallery-overlay {
@@ -188,35 +323,88 @@
         }
 
         .gallery-overlay h3 {
-            font-size: 20px;
-            font-weight: 500;
-            margin-bottom: 5px;
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #fff;
         }
 
         .gallery-overlay p {
             font-size: 14px;
-            color: #888;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
         }
 
-        /* About Section */
+        .gallery-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.4);
+            border-radius: 20px;
+            font-size: 11px;
+            color: #667eea;
+            margin-top: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* About Section with Card */
         .about-section {
-            padding: 100px 40px;
-            max-width: 900px;
+            padding: 120px 40px;
+            max-width: 1000px;
             margin: 0 auto;
+        }
+
+        .about-card {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
+            padding: 60px;
+            backdrop-filter: blur(20px);
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .about-card p {
+            font-size: 20px;
+            line-height: 1.9;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 25px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .stat-item {
             text-align: center;
         }
 
-        .about-section p {
-            font-size: 18px;
-            line-height: 1.8;
-            color: #aaa;
-            margin-bottom: 30px;
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
 
         /* Contact Section */
         .contact-section {
-            padding: 100px 40px;
-            max-width: 600px;
+            padding: 120px 40px;
+            max-width: 800px;
             margin: 0 auto;
             text-align: center;
         }
@@ -224,36 +412,64 @@
         .contact-info {
             display: flex;
             justify-content: center;
-            gap: 40px;
-            margin-top: 40px;
+            gap: 25px;
+            margin-top: 50px;
             flex-wrap: wrap;
         }
 
         .contact-item {
             text-decoration: none;
             color: #fff;
-            padding: 15px 30px;
-            border: 1px solid rgba(255,255,255,0.2);
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 50px;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            font-weight: 600;
+            letter-spacing: 1px;
+            backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .contact-item span {
+            position: relative;
+            z-index: 1;
         }
 
         .contact-item:hover {
-            background: #fff;
-            color: #0a0a0a;
             transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+            border-color: transparent;
+        }
+
+        .contact-item:hover::before {
+            opacity: 1;
         }
 
         /* Footer */
         footer {
             text-align: center;
-            padding: 40px;
-            background: #0a0a0a;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            color: #666;
+            padding: 50px;
+            background: rgba(0, 0, 0, 0.5);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(20px);
         }
 
-        /* Modal */
+        /* Modal with Backdrop Blur */
         .modal {
             display: none;
             position: fixed;
@@ -262,8 +478,9 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.95);
-            animation: fadeIn 0.3s;
+            background: rgba(0, 0, 0, 0.97);
+            backdrop-filter: blur(20px);
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         @keyframes fadeIn {
@@ -278,59 +495,123 @@
             max-height: 90%;
             top: 50%;
             transform: translateY(-50%);
+            animation: zoomIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: translateY(-50%) scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(-50%) scale(1);
+                opacity: 1;
+            }
         }
 
         .modal-content img {
             width: 100%;
             height: auto;
-            border-radius: 8px;
+            border-radius: 20px;
+            box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8);
         }
 
         .close-modal {
-            position: absolute;
-            top: 20px;
-            right: 40px;
+            position: fixed;
+            top: 40px;
+            right: 50px;
             color: #fff;
-            font-size: 40px;
+            font-size: 50px;
             font-weight: 300;
             cursor: pointer;
-            transition: color 0.3s;
+            transition: all 0.3s;
+            z-index: 2001;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
         }
 
         .close-modal:hover {
-            color: #888;
+            background: rgba(102, 126, 234, 0.3);
+            transform: rotate(90deg);
         }
 
         /* Responsive */
+        @media (max-width: 1024px) {
+            .gallery-grid {
+                columns: 2;
+            }
+        }
+
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 42px;
+                font-size: 52px;
+            }
+
+            .hero p {
+                font-size: 16px;
+                letter-spacing: 4px;
             }
 
             .nav-links {
                 gap: 20px;
             }
 
+            .nav-links a {
+                font-size: 11px;
+            }
+
             .gallery-grid {
-                grid-template-columns: 1fr;
+                columns: 1;
             }
 
             .section-title {
-                font-size: 32px;
+                font-size: 42px;
             }
+
+            .stats {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .about-card {
+                padding: 40px 30px;
+            }
+
+            .about-card p {
+                font-size: 16px;
+            }
+        }
+
+        /* Scroll Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s, transform 0.8s;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
     </style>
 </head>
 <body>
     <!-- Header -->
-    <header>
+    <header id="header">
         <nav>
-            <div class="logo">PHOTOFOLIO</div>
+            <div class="logo">pompov_</div>
             <ul class="nav-links">
-                <li><a href="#home">HOME</a></li>
-                <li><a href="#gallery">GALERI</a></li>
-                <li><a href="#about">TENTANG</a></li>
-                <li><a href="#contact">KONTAK</a></li>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#gallery">Gallery</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
             </ul>
         </nav>
     </header>
@@ -338,92 +619,150 @@
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content">
-            <h1>CAPTURING MOMENTS</h1>
-            <p>FOTOGRAFI PROFESIONAL</p>
+            <h1>VISUAL STORIES</h1>
+            <p>Photography & Art</p>
+            <div class="hero-cta">
+                <a href="#gallery" class="cta-button">Explore Gallery</a>
+            </div>
         </div>
     </section>
 
     <!-- Gallery Section -->
-    <section id="gallery" class="gallery-section">
-        <h2 class="section-title">Galeri Foto</h2>
+    <section id="gallery" class="gallery-section fade-in">
+        <h2 class="section-title">Portfolio</h2>
+        <p class="section-subtitle">Latest Works</p>
         <div class="gallery-grid">
             <div class="gallery-item" onclick="openModal(this)">
-                <img src="https://images.unsplash.com/photo-1502899576159-f224dc2349fa?w=800" alt="Landscape">
+                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80" alt="Mountain Lake">
                 <div class="gallery-overlay">
-                    <h3>Pemandangan Alam</h3>
-                    <p>Keindahan alam yang memukau</p>
+                    <h3>Mountain Serenity</h3>
+                    <p>Refleksi sempurna di danau pegunungan saat matahari terbit</p>
+                    <span class="gallery-tag">Landscape</span>
                 </div>
             </div>
             <div class="gallery-item" onclick="openModal(this)">
-                <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800" alt="Mountain">
+                <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80" alt="Mountain Peak">
                 <div class="gallery-overlay">
-                    <h3>Puncak Gunung</h3>
-                    <p>Matahari terbit di pegunungan</p>
+                    <h3>Peak Adventure</h3>
+                    <p>Mendaki ke puncak tertinggi untuk menangkap momen epik</p>
+                    <span class="gallery-tag">Adventure</span>
                 </div>
             </div>
             <div class="gallery-item" onclick="openModal(this)">
-                <img src="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800" alt="Nature">
+                <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80" alt="Forest">
                 <div class="gallery-overlay">
-                    <h3>Danau Tenang</h3>
-                    <p>Refleksi sempurna di air</p>
+                    <h3>Mystic Forest</h3>
+                    <p>Keindahan hutan yang misterius di pagi hari</p>
+                    <span class="gallery-tag">Nature</span>
                 </div>
             </div>
             <div class="gallery-item" onclick="openModal(this)">
-                <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800" alt="Forest">
+                <img src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800&q=80" alt="Beach Sunset">
                 <div class="gallery-overlay">
-                    <h3>Hutan Hijau</h3>
-                    <p>Kedamaian di tengah alam</p>
+                    <h3>Golden Hour</h3>
+                    <p>Momen magis saat matahari tenggelam di laut</p>
+                    <span class="gallery-tag">Sunset</span>
                 </div>
             </div>
             <div class="gallery-item" onclick="openModal(this)">
-                <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800" alt="Path">
+                <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80" alt="Forest Path">
                 <div class="gallery-overlay">
-                    <h3>Jalan Setapak</h3>
-                    <p>Petualangan menanti</p>
+                    <h3>Path to Wonder</h3>
+                    <p>Jalan setapak yang mengundang petualangan baru</p>
+                    <span class="gallery-tag">Journey</span>
                 </div>
             </div>
             <div class="gallery-item" onclick="openModal(this)">
-                <img src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=800" alt="Sunset">
+                <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80" alt="Nature">
                 <div class="gallery-overlay">
-                    <h3>Senja Indah</h3>
-                    <p>Warna langit yang dramatis</p>
+                    <h3>Wild Beauty</h3>
+                    <p>Keindahan alam liar yang belum terjamah</p>
+                    <span class="gallery-tag">Wild</span>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openModal(this)">
+                <img src="https://images.unsplash.com/photo-1502899576159-f224dc2349fa?w=800&q=80" alt="Stars">
+                <div class="gallery-overlay">
+                    <h3>Starry Night</h3>
+                    <p>Langit malam yang penuh bintang menakjubkan</p>
+                    <span class="gallery-tag">Astro</span>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openModal(this)">
+                <img src="https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?w=800&q=80" alt="Waterfall">
+                <div class="gallery-overlay">
+                    <h3>Flowing Dreams</h3>
+                    <p>Air terjun yang mengalir dengan indah di tengah hutan</p>
+                    <span class="gallery-tag">Water</span>
+                </div>
+            </div>
+            <div class="gallery-item" onclick="openModal(this)">
+                <img src="https://images.unsplash.com/photo-1511884642898-4c92249e20b6?w=800&q=80" alt="Mountain Range">
+                <div class="gallery-overlay">
+                    <h3>Mountain Majesty</h3>
+                    <p>Deretan pegunungan yang megah dan menakjubkan</p>
+                    <span class="gallery-tag">Landscape</span>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- About Section -->
-    <section id="about" class="about-section">
-        <h2 class="section-title">Tentang Saya</h2>
-        <p>Saya adalah fotografer profesional yang berfokus pada fotografi landscape dan nature. Dengan pengalaman lebih dari 5 tahun, saya telah mengabadikan keindahan alam dari berbagai lokasi di Indonesia.</p>
-        <p>Setiap foto yang saya ambil adalah cerita tentang keindahan, emosi, dan momen yang tak terlupakan. Saya percaya bahwa fotografi bukan hanya tentang mengambil gambar, tetapi tentang menangkap jiwa dari setiap momen.</p>
+    <section id="about" class="about-section fade-in">
+        <h2 class="section-title">About Me</h2>
+        <p class="section-subtitle">Photographer & Visual Artist</p>
+        <div class="about-card">
+            <p>Saya adalah fotografer profesional yang berfokus pada landscape dan nature photography. Dengan mata yang tajam untuk detail dan komposisi, saya menciptakan karya visual yang menginspirasi dan mengabadikan keindahan dunia kita.</p>
+            <p>Setiap foto adalah cerita, setiap momen adalah kenangan yang abadi. Mari kita ciptakan sesuatu yang luar biasa bersama.</p>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">500+</div>
+                    <div class="stat-label">Projects</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Awards</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">7+</div>
+                    <div class="stat-label">Years</div>
+                </div>
+            </div>
+        </div>
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" class="contact-section">
-        <h2 class="section-title">Hubungi Saya</h2>
-        <p>Tertarik untuk bekerja sama atau ingin memesan jasa fotografi? Hubungi saya!</p>
+    <section id="contact" class="contact-section fade-in">
+        <h2 class="section-title">Let's Connect</h2>
+        <p class="section-subtitle">Ready to work together?</p>
         <div class="contact-info">
-            <a href="mailto:email@example.com" class="contact-item">Email</a>
-            <a href="https://instagram.com" target="_blank" class="contact-item">Instagram</a>
-            <a href="https://wa.me/628123456789" target="_blank" class="contact-item">WhatsApp</a>
+            <a href="mailto:hello@lumina.com" class="contact-item">
+                <span>📧 Email</span>
+            </a>
+            <a href="https://instagram.com" target="_blank" class="contact-item">
+                <span>📷 Instagram</span>
+            </a>
+            <a href="https://wa.me/628123456789" target="_blank" class="contact-item">
+                <span>💬 WhatsApp</span>
+            </a>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <p>&copy; 2024 Portfolio Fotografi. All rights reserved.</p>
+        <p>© 2024 Lumina Photography. Crafted with passion & creativity.</p>
     </footer>
 
     <!-- Modal -->
     <div id="modal" class="modal" onclick="closeModal()">
-        <span class="close-modal">&times;</span>
+        <span class="close-modal">×</span>
         <div class="modal-content">
             <img id="modal-img" src="" alt="">
         </div>
     </div>
 
     <script>
+        // Modal Functions
         function openModal(element) {
             const modal = document.getElementById('modal');
             const modalImg = document.getElementById('modal-img');
@@ -440,7 +779,7 @@
             document.body.style.overflow = 'auto';
         }
 
-        // Smooth scroll
+        // Smooth Scroll
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -454,10 +793,48 @@
             });
         });
 
-        // Close modal with ESC key
+        // Close Modal with ESC
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeModal();
+            }
+        });
+
+        // Header Scroll Effect
+        window.addEventListener('scroll', function() {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll Animation
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in').forEach(element => {
+            observer.observe(element);
+        });
+
+        // Parallax Effect on Mouse Move
+        document.addEventListener('mousemove', function(e) {
+            const hero = document.querySelector('.hero');
+            if (hero) {
+                const mouseX = e.clientX / window.innerWidth;
+                const mouseY = e.clientY / window.innerHeight;
+                hero.style.transform = `translate(${mouseX * 20}px, ${mouseY * 20}px)`;
             }
         });
     </script>
