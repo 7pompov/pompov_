@@ -1,314 +1,296 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ELDAS Graph AI - Analisis Praktikum Elektronika</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        * {
-            font-family: 'Inter', sans-serif;
+import React, { useState, useEffect, useMemo } from 'react';
+import { Upload, FileText, BarChart3, Zap, CircuitBoard, Filter, Wifi, Calculator, BookOpen, Lightbulb } from 'lucide-react';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+
+const App = () => {
+  const [activeModule, setActiveModule] = useState('home');
+  const [uploadedData, setUploadedData] = useState(null);
+  const [calculatedData, setCalculatedData] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Mock module data based on the PDF
+  const modules = [
+    { id: 'acara1', title: 'Pengukuran Dasar Elektronika', icon: FileText },
+    { id: 'acara2', title: 'Pembuktian Hukum Ohm', icon: Zap },
+    { id: 'acara3', title: 'Pembuktian Hukum Kirchoff', icon: CircuitBoard },
+    { id: 'acara4', title: 'Pembagi Tegangan dan Arus', icon: Filter },
+    { id: 'acara5', title: 'Rangkaian Tapis', icon: Wifi },
+    { id: 'acara6', title: 'Rangkaian RLC', icon: BarChart3 },
+    { id: 'acara7', title: 'Karakteristik Dioda', icon: Lightbulb },
+    { id: 'acara8', title: 'Rangkaian Penyearah', icon: Calculator }
+  ];
+
+  // Mock calculation function (simulating AI processing)
+  const processUploadedData = (data) => {
+    setIsProcessing(true);
+    
+    // Simulate AI processing delay
+    setTimeout(() => {
+      // This would be your actual calculation logic
+      const mockCalculatedData = {
+        module: 'acara6',
+        title: 'Rangkaian RLC - Hasil Perhitungan',
+        summary: {
+          averageCurrent: 24.86,
+          averageVoltage: 2.44,
+          resonanceFrequency: 550,
+          impedance: 98.2
+        },
+        chartData: [
+          { frequency: 100, current: 10.16, voltage: 2.10 },
+          { frequency: 200, current: 15.23, voltage: 2.25 },
+          { frequency: 300, current: 18.45, voltage: 2.38 },
+          { frequency: 400, current: 21.67, voltage: 2.42 },
+          { frequency: 500, current: 24.86, voltage: 2.44 },
+          { frequency: 600, current: 22.34, voltage: 2.41 },
+          { frequency: 700, current: 19.78, voltage: 2.35 },
+          { frequency: 800, current: 17.23, voltage: 2.28 },
+          { frequency: 900, current: 14.89, voltage: 2.19 },
+          { frequency: 1000, current: 12.67, voltage: 2.10 }
+        ]
+      };
+      setCalculatedData(mockCalculatedData);
+      setIsProcessing(false);
+    }, 2000);
+  };
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          setUploadedData(data);
+          processUploadedData(data);
+        } catch (error) {
+          // Handle CSV or other formats
+          setUploadedData({ filename: file.name, size: file.size });
+          processUploadedData({ filename: file.name });
         }
-        @keyframes blob {
-            0%, 100% { transform: translate(0, 0) scale(1); }
-            33% { transform: translate(30px, -50px) scale(1.1); }
-            66% { transform: translate(-20px, 20px) scale(0.9); }
-        }
-        .animate-blob {
-            animation: blob 7s infinite;
-        }
-        .animation-delay-2 {
-            animation-delay: 2s;
-        }
-        .animation-delay-4 {
-            animation-delay: 4s;
-        }
-        .gradient-text {
-            background: linear-gradient(to right, #a855f7, #ec4899, #06b6d4);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        #dropzone.dragover {
-            background: rgba(168, 85, 247, 0.2);
-            border-color: #a855f7;
-        }
-        .glass {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-    </style>
-</head>
-<body class="bg-slate-900 text-white overflow-x-hidden">
-    <!-- Background Blobs -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-        <div class="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2"></div>
-        <div class="absolute top-1/2 left-1/2 w-80 h-80 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4"></div>
+      };
+      reader.readAsText(file);
+    }
+  };
+
+  const HomeScreen = () => (
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="container mx-auto px-4 py-12">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-indigo-600 rounded-full mb-6">
+            <BookOpen className="w-10 h-10 text-white" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
+            Laboratorium Elektronika Dasar
+          </h1>
+          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            Platform AI untuk analisis data praktikum elektronika dasar FMIPA UNSOED
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+          {modules.map((module) => {
+            const Icon = module.icon;
+            return (
+              <button
+                key={module.id}
+                onClick={() => setActiveModule(module.id)}
+                className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 border border-gray-100"
+              >
+                <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mb-4 mx-auto">
+                  <Icon className="w-6 h-6 text-indigo-600" />
+                </div>
+                <h3 className="font-semibold text-gray-800 text-center">{module.title}</h3>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="bg-white rounded-2xl p-8 shadow-xl max-w-4xl mx-auto">
+          <h2 className="text-2xl font-bold text-gray-800 mb-4 text-center">Fitur Utama</h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <Upload className="w-8 h-8 text-green-600" />
+              </div>
+              <h3 className="font-semibold text-gray-800 mb-2">Upload Data</h3>
+              <p className="text-gray-600 text-sm">Upload file data pengamatan dalam berbagai format</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <BarChart3 className="w-8 h-8 text-blue-600" />
+              </div>
+              <h3 className="font-semibold text-gray-800 mb-2">AI Analysis</h3>
+              <p className="text-gray-600 text-sm">Analisis otomatis dengan kecerdasan buatan</p>
+            </div>
+            <div className="text-center">
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                <FileText className="w-8 h-8 text-purple-600" />
+              </div>
+              <h3 className="font-semibold text-gray-800 mb-2">Laporan Otomatis</h3>
+              <p className="text-gray-600 text-sm">Hasil perhitungan dan grafik siap cetak</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  );
 
-    <!-- Navbar -->
-    <nav class="relative z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-            <div class="flex justify-between items-center">
-                <div class="flex items-center gap-3 cursor-pointer" onclick="showHome()">
-                    <div class="w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center">
-                        ⚡
-                    </div>
-                    <span class="text-xl font-black gradient-text">ELDAS Graph AI</span>
-                </div>
-                <a href="https://github.com" target="_blank" class="flex items-center gap-2 px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-full transition-all duration-300 border border-slate-700">
-                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
-                    <span class="hidden sm:inline">GitHub</span>
-                </a>
-            </div>
-        </div>
-    </nav>
+  const ModuleScreen = ({ module }) => {
+    const currentModule = modules.find(m => m.id === module);
+    const Icon = currentModule?.icon || FileText;
 
-    <!-- Main Content -->
-    <div class="relative z-10">
-        <!-- Home Page -->
-        <div id="homePage" class="min-h-screen">
-            <div class="max-w-7xl mx-auto px-4 py-20 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <div class="inline-flex items-center gap-2 bg-purple-500/20 backdrop-blur-sm px-4 py-2 rounded-full mb-6 border border-purple-500/30">
-                        ✨ <span class="text-purple-200 font-medium">AI-Powered Analysis</span>
-                    </div>
-                    
-                    <h1 class="text-6xl font-black gradient-text mb-6 animate-pulse">
-                        ELDAS Graph AI
-                    </h1>
-                    
-                    <p class="text-2xl text-gray-300 mb-4 font-light">
-                        Generator Grafik Praktikum Elektronika Dasar
-                    </p>
-                    
-                    <p class="text-lg text-purple-300 mb-8">
-                        Powered by Artificial Intelligence | Lab. Elektronika Instrumentasi & Geofisika
-                    </p>
-                    
-                    <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                        <button onclick="showModules()" class="group px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-white font-bold text-lg shadow-2xl hover:shadow-purple-500/50 transform hover:scale-105 transition-all duration-300">
-                            Mulai Analisis →
-                        </button>
-                        
-                        <a href="https://github.com" target="_blank" class="px-8 py-4 bg-slate-800 hover:bg-slate-700 rounded-full text-white font-bold text-lg shadow-2xl border border-slate-700 transform hover:scale-105 transition-all duration-300">
-                            View on GitHub
-                        </a>
-                    </div>
-                </div>
-                
-                <!-- Feature Cards -->
-                <div class="grid md:grid-cols-3 gap-8 mt-20">
-                    <div class="glass p-6 rounded-2xl hover:scale-105 transition-all duration-300">
-                        <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center mb-4 text-2xl">📤</div>
-                        <h3 class="text-xl font-bold mb-2">Drag & Drop</h3>
-                        <p class="text-gray-400">Upload file CSV data pengamatan dengan mudah</p>
-                    </div>
-                    
-                    <div class="glass p-6 rounded-2xl hover:scale-105 transition-all duration-300">
-                        <div class="w-12 h-12 bg-gradient-to-br from-cyan-500 to-blue-500 rounded-xl flex items-center justify-center mb-4 text-2xl">🧠</div>
-                        <h3 class="text-xl font-bold mb-2">AI Analysis</h3>
-                        <p class="text-gray-400">Analisis otomatis dengan AI untuk hasil akurat</p>
-                    </div>
-                    
-                    <div class="glass p-6 rounded-2xl hover:scale-105 transition-all duration-300">
-                        <div class="w-12 h-12 bg-gradient-to-br from-green-500 to-teal-500 rounded-xl flex items-center justify-center mb-4 text-2xl">📊</div>
-                        <h3 class="text-xl font-bold mb-2">Beautiful Graphs</h3>
-                        <p class="text-gray-400">Visualisasi data yang menarik dan profesional</p>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="bg-slate-900/50 backdrop-blur-sm border-t border-slate-800 py-8 mt-20">
-                <div class="text-center">
-                    <p class="text-gray-400">Program Studi Fisika - FMIPA Universitas Jenderal Soedirman</p>
-                    <p class="text-gray-500 text-sm mt-2">Purwokerto 2025</p>
-                </div>
-            </div>
-        </div>
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-100">
+        <div className="container mx-auto px-4 py-8">
+          <button
+            onClick={() => setActiveModule('home')}
+            className="mb-6 flex items-center text-indigo-600 hover:text-indigo-800 transition-colors"
+          >
+            <span className="mr-2">←</span> Kembali ke Beranda
+          </button>
 
-        <!-- Modules Page -->
-        <div id="modulesPage" class="hidden min-h-screen">
-            <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-                <div class="mb-12">
-                    <button onclick="showHome()" class="text-purple-400 hover:text-purple-300 mb-6 flex items-center gap-2">
-                        ← Kembali ke Home
-                    </button>
-                    
-                    <h2 class="text-4xl font-black gradient-text mb-4">Pilih Modul Praktikum</h2>
-                    <p class="text-gray-400 text-lg">Pilih modul sesuai dengan acara praktikum yang akan dianalisis</p>
-                </div>
-                
-                <div id="modulesList" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+          <div className="bg-white rounded-2xl shadow-xl p-8 mb-8">
+            <div className="flex items-center mb-6">
+              <div className="w-14 h-14 bg-indigo-100 rounded-lg flex items-center justify-center mr-4">
+                <Icon className="w-7 h-7 text-indigo-600" />
+              </div>
+              <h1 className="text-3xl font-bold text-gray-800">{currentModule?.title}</h1>
             </div>
-        </div>
 
-        <!-- Analysis Page -->
-        <div id="analysisPage" class="hidden min-h-screen">
-            <div class="max-w-7xl mx-auto px-4 py-12 sm:px-6 lg:px-8">
-                <div class="mb-8">
-                    <button onclick="showModules()" class="text-purple-400 hover:text-purple-300 mb-6 flex items-center gap-2">
-                        ← Pilih Modul Lain
-                    </button>
-                    
-                    <div id="moduleHeader" class="inline-block bg-gradient-to-r from-purple-500 to-pink-500 rounded-2xl p-6 mb-6 shadow-2xl">
-                        <div class="flex items-center gap-4">
-                            <div id="moduleIcon" class="text-5xl">📊</div>
-                            <div>
-                                <h2 id="moduleTitle" class="text-3xl font-black text-white">Modul Praktikum</h2>
-                                <p id="moduleDesc" class="text-white/80">Deskripsi modul</p>
-                            </div>
-                        </div>
-                    </div>
+            <div className="grid md:grid-cols-2 gap-8">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Upload Data Pengamatan</h2>
+                <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-indigo-400 transition-colors">
+                  <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-600 mb-4">Tarik dan lepas file data Anda di sini</p>
+                  <label className="bg-indigo-600 text-white px-6 py-2 rounded-lg cursor-pointer hover:bg-indigo-700 transition-colors">
+                    Pilih File
+                    <input
+                      type="file"
+                      className="hidden"
+                      onChange={handleFileUpload}
+                      accept=".csv,.xlsx,.xls,.json,.txt"
+                    />
+                  </label>
+                  <p className="text-sm text-gray-500 mt-2">Format: CSV, Excel, JSON, atau TXT</p>
                 </div>
-                
-                <!-- Upload Zone -->
-                <div id="uploadZone" class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border-2 border-dashed border-slate-700 mb-8">
-                    <div id="dropzone" class="text-center py-16 rounded-xl bg-slate-800/50 transition-all duration-300">
-                        <div class="text-6xl mb-6">📤</div>
-                        <h3 class="text-2xl font-bold mb-4">Upload File Data Pengamatan</h3>
-                        <p class="text-gray-400 mb-6 max-w-md mx-auto">
-                            Drag & drop file CSV Anda di sini atau klik tombol di bawah
-                        </p>
-                        
-                        <label class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full text-white font-bold text-lg shadow-2xl hover:shadow-purple-500/50 cursor-pointer transform hover:scale-105 transition-all duration-300">
-                            📄 Pilih File CSV
-                            <input type="file" id="fileInput" accept=".csv,.txt" class="hidden" onchange="handleFile(event)">
-                        </label>
-                        
-                        <div class="mt-8 text-left max-w-2xl mx-auto bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
-                            <div class="flex items-start gap-3">
-                                <div class="text-blue-400 text-xl">ℹ</div>
-                                <div>
-                                    <p class="text-blue-300 font-semibold mb-2">Format File CSV:</p>
-                                    <pre class="text-gray-400 text-sm font-mono bg-slate-900/50 p-3 rounded">X,Y
-1,0.21
-2,0.42
-3,0.64
-...</pre>
-                                    <p class="text-gray-400 text-sm mt-2">
-                                        Baris pertama adalah header (X,Y), baris selanjutnya adalah data
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
+              </div>
+
+              <div>
+                <h2 className="text-xl font-semibold text-gray-800 mb-4">Status Proses</h2>
+                {isProcessing ? (
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6">
+                    <div className="flex items-center mb-3">
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-yellow-600 mr-3"></div>
+                      <span className="font-medium text-yellow-800">Memproses dengan AI...</span>
                     </div>
-                </div>
-                
-                <!-- Loading -->
-                <div id="loadingSection" class="hidden bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-12 border border-purple-500/30 mb-8 text-center">
-                    <div class="flex flex-col items-center gap-4">
-                        <div class="relative">
-                            <div class="w-20 h-20 border-4 border-purple-500/30 border-t-purple-500 rounded-full animate-spin"></div>
-                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-3xl">🧠</div>
-                        </div>
-                        <div>
-                            <h3 class="text-2xl font-bold mb-2">AI Sedang Menganalisis Data...</h3>
-                            <p class="text-gray-400">Mohon tunggu sebentar</p>
-                        </div>
+                    <p className="text-yellow-700 text-sm">Sistem sedang menganalisis data Anda menggunakan algoritma kecerdasan buatan</p>
+                  </div>
+                ) : uploadedData ? (
+                  <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+                    <div className="flex items-center mb-2">
+                      <div className="w-5 h-5 bg-green-500 rounded-full mr-3"></div>
+                      <span className="font-medium text-green-800">Data berhasil diupload</span>
                     </div>
-                </div>
-                
-                <!-- Results -->
-                <div id="resultsSection" class="hidden space-y-8">
-                    <!-- Graph -->
-                    <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border border-slate-700 shadow-2xl">
-                        <div class="flex justify-between items-center mb-6 flex-wrap gap-4">
-                            <h3 class="text-2xl font-bold flex items-center gap-2">
-                                📈 Grafik Hasil Analisis
-                            </h3>
-                            <button onclick="downloadResults()" class="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-teal-600 rounded-full text-white font-semibold hover:shadow-lg hover:shadow-green-500/50 transition-all duration-300">
-                                💾 Download Hasil
-                            </button>
-                        </div>
-                        
-                        <div class="bg-white rounded-xl p-6">
-                            <canvas id="mainChart"></canvas>
-                        </div>
+                    <p className="text-green-700 text-sm">File: {uploadedData.filename || 'data_pengamatan.xlsx'}</p>
+                  </div>
+                ) : (
+                  <div className="bg-gray-50 border border-gray-200 rounded-xl p-6">
+                    <div className="flex items-center mb-2">
+                      <div className="w-5 h-5 bg-gray-400 rounded-full mr-3"></div>
+                      <span className="font-medium text-gray-600">Belum ada data</span>
                     </div>
-                    
-                    <!-- AI Analysis -->
-                    <div class="bg-gradient-to-br from-purple-900/30 to-pink-900/30 backdrop-blur-sm rounded-2xl p-8 border border-purple-500/30 shadow-2xl">
-                        <div class="flex items-center gap-3 mb-6">
-                            <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-500 rounded-xl flex items-center justify-center text-2xl">🧠</div>
-                            <h3 class="text-2xl font-bold gradient-text">Hasil Analisis AI</h3>
-                        </div>
-                        
-                        <div class="grid md:grid-cols-2 gap-6 mb-6">
-                            <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                                <p class="text-gray-400 text-sm mb-2">Persamaan Regresi</p>
-                                <p id="equation" class="text-2xl font-bold font-mono">y = mx + b</p>
-                            </div>
-                            
-                            <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                                <p class="text-gray-400 text-sm mb-2">Koefisien Determinasi (R²)</p>
-                                <p id="r2Value" class="text-2xl font-bold text-green-400">0.0000</p>
-                            </div>
-                            
-                            <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                                <p class="text-gray-400 text-sm mb-2">Jumlah Data Points</p>
-                                <p id="dataCount" class="text-2xl font-bold text-cyan-400">0</p>
-                            </div>
-                            
-                            <div class="bg-slate-800/50 rounded-xl p-6 border border-slate-700">
-                                <p class="text-gray-400 text-sm mb-2">Range Y</p>
-                                <p id="rangeY" class="text-2xl font-bold text-purple-400">0 - 0</p>
-                            </div>
-                        </div>
-                        
-                        <div class="bg-gradient-to-r from-purple-500/10 to-pink-500/10 rounded-xl p-6 border border-purple-500/30">
-                            <p class="text-purple-300 font-semibold mb-2 flex items-center gap-2">
-                                ✨ Interpretasi AI
-                            </p>
-                            <p id="interpretation" class="text-gray-300 leading-relaxed">
-                                Menunggu analisis...
-                            </p>
-                        </div>
-                    </div>
-                    
-                    <!-- Data Table -->
-                    <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl border border-slate-700 overflow-hidden shadow-2xl">
-                        <div class="bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4">
-                            <h3 class="text-xl font-bold">Data Pengamatan (<span id="tableCount">0</span> titik)</h3>
-                        </div>
-                        <div class="overflow-x-auto max-h-96">
-                            <table class="w-full">
-                                <thead class="bg-slate-800 sticky top-0">
-                                    <tr>
-                                        <th class="px-6 py-4 text-left text-sm font-bold text-purple-400">No</th>
-                                        <th class="px-6 py-4 text-left text-sm font-bold text-purple-400">X</th>
-                                        <th class="px-6 py-4 text-left text-sm font-bold text-purple-400">Y</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="dataTableBody"></tbody>
-                            </table>
-                        </div>
-                    </div>
-                    
-                    <!-- Upload New -->
-                    <div class="text-center">
-                        <label class="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 rounded-full text-white font-bold cursor-pointer transform hover:scale-105 transition-all duration-300 border border-slate-600">
-                            📤 Upload File Baru
-                            <input type="file" accept=".csv,.txt" class="hidden" onchange="handleFile(event)">
-                        </label>
-                    </div>
-                </div>
+                    <p className="text-gray-500 text-sm">Upload file data pengamatan untuk memulai analisis</p>
+                  </div>
+                )}
+              </div>
             </div>
+          </div>
+
+          {calculatedData && (
+            <div className="bg-white rounded-2xl shadow-xl p-8">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6">Hasil Analisis AI</h2>
+              
+              <div className="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Ringkasan Hasil</h3>
+                  <div className="space-y-3">
+                    <div className="flex justify-between py-2 border-b border-gray-100">
+                      <span className="text-gray-600">Arus Rata-rata:</span>
+                      <span className="font-medium">{calculatedData.summary.averageCurrent} mA</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-gray-100">
+                      <span className="text-gray-600">Tegangan Rata-rata:</span>
+                      <span className="font-medium">{calculatedData.summary.averageVoltage} V</span>
+                    </div>
+                    <div className="flex justify-between py-2 border-b border-gray-100">
+                      <span className="text-gray-600">Frekuensi Resonansi:</span>
+                      <span className="font-medium">{calculatedData.summary.resonanceFrequency} Hz</span>
+                    </div>
+                    <div className="flex justify-between py-2">
+                      <span className="text-gray-600">Impedansi:</span>
+                      <span className="font-medium">{calculatedData.summary.impedance} Ω</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-800 mb-4">Grafik Analisis</h3>
+                  <div className="h-64">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <LineChart data={calculatedData.chartData}>
+                        <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                        <XAxis 
+                          dataKey="frequency" 
+                          label={{ value: 'Frekuensi (Hz)', position: 'insideBottom', offset: -5 }}
+                          stroke="#6b7280"
+                        />
+                        <YAxis 
+                          label={{ value: 'Arus (mA)', angle: -90, position: 'insideLeft' }}
+                          stroke="#6b7280"
+                        />
+                        <Tooltip 
+                          contentStyle={{ 
+                            backgroundColor: 'white', 
+                            border: '1px solid #e5e7eb', 
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
+                          }}
+                        />
+                        <Legend />
+                        <Line 
+                          type="monotone" 
+                          dataKey="current" 
+                          name="Arus (mA)"
+                          stroke="#4f46e5" 
+                          strokeWidth={2}
+                          dot={{ fill: '#4f46e5', strokeWidth: 2, r: 4 }}
+                          activeDot={{ r: 6, stroke: '#4f46e5', strokeWidth: 2 }}
+                        />
+                      </LineChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              </div>
+
+              <div className="text-center">
+                <button className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 transition-colors font-medium">
+                  Unduh Laporan Lengkap (PDF)
+                </button>
+              </div>
+            </div>
+          )}
         </div>
+      </div>
+    );
+  };
+
+  return (
+    <div className="font-sans">
+      {activeModule === 'home' ? <HomeScreen /> : <ModuleScreen module={activeModule} />}
     </div>
+  );
+};
 
-    <script>
-        const modules = [
-            { id: 'acara1', name: 'Acara 1: Pengukuran Dasar', icon: '📏', desc: 'Pengukuran tegangan AC, DC, dan frekuensi', color: 'from-blue-500 to-cyan-500' },
-            { id: 'acara2-v', name: 'Acara 2: Hukum Ohm - Variasi Tegangan', icon: '⚡', desc: 'Hubungan tegangan dan arus listrik', color: 'from-purple-500 to-pink-500' },
-            { id: 'acara2-r', name: 'Acara 2: Hukum Ohm - Variasi Hambatan', icon: '🔌', desc: 'Hubungan hambatan dan arus listrik', color: 'from-indigo-500 to-purple-500' },
-            { id: 'acara3', name: 'Acara 3: Hukum Kirchoff', icon: '🔄', desc: 'Hukum Kirchoff I dan II', color: 'from-green-500 to-teal-500' },
-            { id: 'acara4', name: 'Acara 4: Pembagi Tegangan & Arus', icon: '⚖', desc: 'Rangkaian pembagi tegangan dan arus', color: 'from-yellow-500 to-orange-500' },
-            { id: 'acara5-low', name: 'Acara 5: Tapis Lolos Rendah', icon: '📉', desc: 'Low-pass filter characteristics', color: 'from-red-500 to-pink-500' },
-            { id: 'acara5-high', name: 'Acara 5: Tapis Lolos Tinggi', icon: '📈', desc: 'High-pass filter characteristics', color: 'from-pink-500 to-rose-500' },
-            { id: 'acara6', name: 'Acara 6: Rangkaian RLC', icon: '〰', desc: 'Reaktansi dan resonansi RLC', color: 'from-cyan-500 to-blue-500' },
-            { id: 'acara7-f', name: 'Acara 7: Dioda Bias Maju', icon: '▶', desc: 'Karakteristik dioda bias maju', color:
+export default App;
